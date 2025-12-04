@@ -4,3 +4,4 @@ mangum
 cloudinary
 pymongo
 dnspython
+python-multipart
