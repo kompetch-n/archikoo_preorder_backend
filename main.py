@@ -39,7 +39,8 @@ async def create_order(
     amount: Optional[int] = Form(None),
     image_url: Optional[str] = Form(None),
     tracking_number: Optional[str] = Form(None),
-    status: Optional[str] = Form(None)
+    status: Optional[str] = Form(None),
+    note: Optional[str] = Form(None)          # ✅ เพิ่ม
 ):
     order = {
         "name": name or "",
@@ -49,7 +50,8 @@ async def create_order(
         "amount": amount or 0,
         "image_url": image_url or "",
         "tracking_number": tracking_number or "",
-        "status": status or ""
+        "status": status or "",
+        "note": note or ""                     # ✅ เพิ่ม
     }
 
     result = orders_collection.insert_one(order)
@@ -93,14 +95,15 @@ async def get_order(order_id: str):
 @app.put("/orders/{order_id}")
 async def update_order(
     order_id: str,
-    name: str = Form(None),
-    product: str = Form(None),   # ✅ เพิ่ม
-    address: str = Form(None),
-    phone: str = Form(None),
-    amount: int = Form(None),
-    image_url: str = Form(None),
-    tracking_number: str = Form(None),
-    status: str = Form(None)
+    name: Optional[str] = Form(None),
+    product: Optional[str] = Form(None),
+    address: Optional[str] = Form(None),
+    phone: Optional[str] = Form(None),
+    amount: Optional[int] = Form(None),
+    image_url: Optional[str] = Form(None),
+    tracking_number: Optional[str] = Form(None),
+    status: Optional[str] = Form(None),
+    note: Optional[str] = Form(None)           # ✅ เพิ่ม
 ):
     try:
         obj_id = ObjectId(order_id)
@@ -110,13 +113,14 @@ async def update_order(
     update_data = {
         k: v for k, v in {
             "name": name,
-            "product": product,   # ✅ เพิ่ม
+            "product": product,
             "address": address,
             "phone": phone,
             "amount": amount,
             "image_url": image_url,
             "tracking_number": tracking_number,
-            "status": status
+            "status": status,
+            "note": note                          # ✅ เพิ่ม
         }.items() if v is not None
     }
 
