@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from bson import ObjectId
 from cloudinary_setup import cloudinary
 from database import orders_collection
+from typing import Optional
 # from mangum import Mangum  # เผื่อ deploy vercel
 
 app = FastAPI()
@@ -31,28 +32,31 @@ async def upload_image(file: UploadFile = File(...)):
 # ----------------------------------------
 @app.post("/orders")
 async def create_order(
-    name: str = Form(...),
-    product: str = Form(...),   # ✅ เพิ่ม
-    address: str = Form(...),
-    phone: str = Form(...),
-    amount: int = Form(...),
-    image_url: str = Form(...),
-    tracking_number: str = Form(""),
-    status: str = Form(...)
+    name: Optional[str] = Form(None),
+    product: Optional[str] = Form(None),
+    address: Optional[str] = Form(None),
+    phone: Optional[str] = Form(None),
+    amount: Optional[int] = Form(None),
+    image_url: Optional[str] = Form(None),
+    tracking_number: Optional[str] = Form(None),
+    status: Optional[str] = Form(None)
 ):
     order = {
-        "name": name,
-        "product": product,     # ✅ เพิ่ม
-        "address": address,
-        "phone": phone,
-        "amount": amount,
-        "image_url": image_url,
-        "tracking_number": tracking_number,
-        "status": status
+        "name": name or "",
+        "product": product or "",
+        "address": address or "",
+        "phone": phone or "",
+        "amount": amount or 0,
+        "image_url": image_url or "",
+        "tracking_number": tracking_number or "",
+        "status": status or ""
     }
 
     result = orders_collection.insert_one(order)
-    return {"message": "created", "id": str(result.inserted_id)}
+    return {
+        "message": "created",
+        "id": str(result.inserted_id)
+    }
 
 # ----------------------------------------
 # 📌 GET ALL ORDERS
