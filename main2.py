@@ -32,7 +32,6 @@ async def upload_image(file: UploadFile = File(...)):
 @app.post("/orders")
 async def create_order(
     name: str = Form(...),
-    product: str = Form(...),   # ✅ เพิ่ม
     address: str = Form(...),
     phone: str = Form(...),
     amount: int = Form(...),
@@ -42,7 +41,6 @@ async def create_order(
 ):
     order = {
         "name": name,
-        "product": product,     # ✅ เพิ่ม
         "address": address,
         "phone": phone,
         "amount": amount,
@@ -90,7 +88,6 @@ async def get_order(order_id: str):
 async def update_order(
     order_id: str,
     name: str = Form(None),
-    product: str = Form(None),   # ✅ เพิ่ม
     address: str = Form(None),
     phone: str = Form(None),
     amount: int = Form(None),
@@ -106,7 +103,6 @@ async def update_order(
     update_data = {
         k: v for k, v in {
             "name": name,
-            "product": product,   # ✅ เพิ่ม
             "address": address,
             "phone": phone,
             "amount": amount,
@@ -116,10 +112,7 @@ async def update_order(
         }.items() if v is not None
     }
 
-    result = orders_collection.update_one(
-        {"_id": obj_id},
-        {"$set": update_data}
-    )
+    result = orders_collection.update_one({"_id": obj_id}, {"$set": update_data})
 
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Order not found")
