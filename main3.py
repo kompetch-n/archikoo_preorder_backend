@@ -4,7 +4,6 @@ from bson import ObjectId
 from cloudinary_setup import cloudinary
 from database import orders_collection
 from typing import Optional
-import json
 # from mangum import Mangum  # เผื่อ deploy vercel
 
 app = FastAPI()
@@ -41,10 +40,7 @@ async def create_order(
     image_url: Optional[str] = Form(None),
     tracking_number: Optional[str] = Form(None),
     status: Optional[str] = Form(None),
-    note: Optional[str] = Form(None),
-    
-    items: Optional[str] = Form(None),
-    total_price: Optional[float] = Form(None),
+    note: Optional[str] = Form(None)          # ✅ เพิ่ม
 ):
     order = {
         "name": name or "",
@@ -55,10 +51,7 @@ async def create_order(
         "image_url": image_url or "",
         "tracking_number": tracking_number or "",
         "status": status or "",
-        "note": note or "",
-        
-        "items": json.loads(items) if items else [],
-        "total_price": total_price or 0,
+        "note": note or ""                     # ✅ เพิ่ม
     }
 
     result = orders_collection.insert_one(order)
